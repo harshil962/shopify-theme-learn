@@ -1,0 +1,12 @@
+{
+    "sections":{
+        "main":{
+            "type":"header",
+            "settings":{}
+        },
+        "hero-banner"{
+            "type":"Haro Banner",
+            "settings":{},
+    },
+    "order":["main", "Hero Banner"]
+}
