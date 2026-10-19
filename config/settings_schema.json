@@ -1,1 +1,67 @@
-[]
+
+[
+  {
+    "name": "Layout",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Page Width"
+      },
+      {
+        "type": "range",
+        "id": "page_width",
+        "label": "Page Width",
+        "min": 1000,
+        "max": 2000,
+        "step": 40,
+        "unit": "px",
+        "default": 1000
+      },
+      {
+        "type": "header",
+        "content": "Page padding Mobile"
+      },
+      {
+        "type": "range",
+        "id": "page_padding_mobile",
+        "label": "Page Padding",
+        "min": 0,
+        "max": 50,
+        "step": 2,
+        "unit": "px",
+        "default": 16
+      },
+      {
+        "type": "header",
+        "content": "Page padding Desktop"
+      },
+      {
+        "type": "range",
+        "id": "page_padding_desktop",
+        "label": "Page Padding",
+        "min": 0,
+        "max": 100,
+        "step": 2,
+        "unit": "px",
+        "default": 80
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "body_font",
+        "label": "Body font",
+        "default": "assistant_n4"
+      },
+      {
+        "type": "font_picker",
+        "id": "heading_font",
+        "label": "Heading font",
+        "default": "assistant_n4"
+      }
+    ]
+  }
+]
