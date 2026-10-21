@@ -4,7 +4,7 @@
   assign heading_text = section.settings.heading_text
   assign description_text = section.settings.description_text
 -%}
-<div class="hero-banner page-width {%  if full_width_section %}page-width--full{% endif %}">
+<div class="hero-banner page-width {%  if full_width_Section %}page-width--full{% endif %}">
   <div class="image-wrapper hero-banner__image">
     {% if banner != blank %}
       {{ banner | image_url: width: 1000 | image_tag }}

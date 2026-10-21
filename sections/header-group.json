@@ -8,17 +8,80 @@
  * ------------------------------------------------------------
  */
 {
-    "name":"header group",
-    "type": "header",
-    "sections":{
-        "main":{
-            "type":"header-section", 
-            "settings":{}
-        },
-        "announcementbar":{
-            "type":"announcementbar",
-            "settings":{}
-        }
+  "name": "Header group",
+  "type": "header",
+  "sections": {
+    "announcementbar": {
+      "type": "announcementbar",
+      "settings": {}
     },
-    "order":["announcementbar","main"]
+    "main": {
+      "type": "header-section",
+      "settings": {
+        "menu": "main-menu"
+      }
+    },
+    "richtext_FRKxcG": {
+      "type": "richtext",
+      "blocks": {
+        "caption_m3WDHj": {
+          "type": "caption",
+          "settings": {
+            "name": "Caption-Eyebrow Text"
+          }
+        },
+        "heading_wQBWcj": {
+          "type": "heading",
+          "settings": {
+            "heading": "Your awesome heading text goes here."
+          }
+        },
+        "sub_heading_i7Kabw": {
+          "type": "sub_heading",
+          "settings": {
+            "sub_heading": "This is the place to enter a relevant sub-heading text."
+          }
+        },
+        "description_iQVV3D": {
+          "type": "description",
+          "settings": {
+            "description": "<p>this is your chance to pursuade your customers by explaining them about the heading.</p>"
+          }
+        },
+        "buttons_VgpN43": {
+          "type": "buttons",
+          "settings": {
+            "primary_btn_text": "shop now",
+            "secondary_btn_text": "shop now",
+            "primary_btn_link": "shopify://collections/all",
+            "secondary_btn_link": "shopify://collections/all"
+          }
+        }
+      },
+      "block_order": [
+        "caption_m3WDHj",
+        "heading_wQBWcj",
+        "sub_heading_i7Kabw",
+        "description_iQVV3D",
+        "buttons_VgpN43"
+      ],
+      "name": "Richtext",
+      "settings": {
+        "section_bg": "#C83232",
+        "inner_bg": "#CCABAB",
+        "button_bg_primary": "#D71A1A",
+        "button_bg_secondary": "#D3AEAE",
+        "button_text_primary": "#fff",
+        "button_text_secondary": "#fff",
+        "padding_top": 3,
+        "padding_bottom": 3,
+        "padding_inner": 3
+      }
+    }
+  },
+  "order": [
+    "announcementbar",
+    "main",
+    "richtext_FRKxcG"
+  ]
 }

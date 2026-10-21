@@ -7,20 +7,21 @@
  * made to this file may be overwritten.
  * ------------------------------------------------------------
  */
-
 {
   "sections": {
-    "main": {
-      "type": "header-section",
-      "settings": {}
-    },
-    "hero-banner": {
+
+    "hero_banner_wpAVab": {
       "type": "hero-banner",
-      "settings": {}
+      "name": "Hero banner",
+      "settings": {
+        "banner": "shopify://shop_images/theme_cover_image.jpg",
+        "heading_text": "hello everyone",
+        "description_text": "this is my first decs",
+        "full_width_Section": false
+      }
     }
   },
   "order": [
-    "main",
-    "hero-banner"
+    "hero_banner_wpAVab"
   ]
 }

@@ -6,6 +6,12 @@
     margin: 0;
 }
 
+*:focus-visible{
+    outline: 2px solid #1a1a1a;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
 html{
     box-sizing: border-box;
     font-size: 100%;
@@ -31,7 +37,6 @@ img, svg, picture, iframe, canvas, video{
 }
 
 img,svg{
-    width: 100%;
     height: auto;
 }
 
@@ -61,8 +66,87 @@ button, select, input, textarea{
         max-width: none;
     }
 
+    summary{
+        list-style: none;
+        cursor: pointer;
+    }
+
+    summary::webkit-details-marker{
+        display: none;
+    }
+
+     
+
     @media(min-width:46.875em){
         .page-width{
             padding-inline: var(--page-padding-desktop);
         }
     }
+
+    .flex-wrap{
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap:10px
+    }
+
+    .flex-between{
+        display: flex;
+        justify-content: space-between;
+        gap: 5px;
+        align-items: center;
+    }
+
+    .d-block{
+        display: block;
+    }
+
+.dropdown-list {
+    position: relative;
+}
+
+.dropdown-list > .sub-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    color: black;
+    min-width: 12.5rem;
+    border: 1px solid black;
+    z-index: 10;
+}
+
+.dropdown-list-nested {
+    position: relative;
+}
+
+.dropdown-list-nested > .sub-menu--flyout {
+    position: absolute;
+    top: 0;
+    left: 100%;
+    background-color: #fff;
+    color: black;
+    min-width: 12.5rem;
+    border: 1px solid black;
+    z-index: 20;
+}
+
+.dropdown-list-nested > summary,
+.sub-menu a{
+    padding: 10px 20px;
+}
+
+
+
+.richtext{
+    padding-top: var(--padding-top);
+    padding-bottom: var(--padding-bottom);
+    background-color: var(--section-bg);
+    
+}
+
+
+
+
+
+    
