@@ -1,18 +1,21 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Playground</title>
-    {% render 'theme-variables' %}
-    {{ "base.css" | asset_url | stylesheet_tag }}
-    {{ content_for_header }}
-
-</head>
-<body>
-    <header> {% sections 'header-group' %}</header>
-    <main>{{ content_for_layout }}</main>
-    <footer> {% sections 'footer-group' %} </footer>
+    <title>{{ page_title | escape }}</title>
     
-</body>
+    {% if page_description != blank %}
+      <meta name="description" content="{{ page_description | escape }}">
+    {% endif %}
+
+    {% render 'theme-variables' %}
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+    {{ content_for_header }}
+  </head>
+  <body>
+    <header>{% sections 'header-group' %}</header>
+    <main>{{ content_for_layout }}</main>
+    <footer>{% sections 'footer-group' %}</footer>
+  </body>
 </html>

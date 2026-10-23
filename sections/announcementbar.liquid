@@ -1,4 +1,49 @@
-<p>hello announcement</p>
+<div class="announcement-bar">
+  <p class="announcement-bar__message">Hello announcement</p>
+</div>
+
+{% style %}
+  .announcement-bar {
+    position: relative;
+    display: grid;
+    min-height: 2.75rem;
+    place-items: center;
+    padding: 0.65rem 1rem;
+    overflow: hidden;
+    background: linear-gradient(110deg, #172554, #1e3a8a);
+    color: #fff;
+    text-align: center;
+  }
+
+  .announcement-bar::after {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #60a5fa, #bfdbfe, #60a5fa);
+    content: '';
+  }
+
+  .announcement-bar__message {
+    max-width: 100%;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+  }
+
+  @media screen and (max-width: 749px) {
+    .announcement-bar {
+      min-height: 2.5rem;
+      padding-inline: 1rem;
+    }
+
+    .announcement-bar__message {
+      font-size: 0.75rem;
+    }
+  }
+{% endstyle %}
 
 {% schema %}
 {

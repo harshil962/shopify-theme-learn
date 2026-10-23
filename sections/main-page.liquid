@@ -1,0 +1,7 @@
+
+{% if page != blank %}
+  <div class="page-details">
+    <h1>{{ page.title | escape }}</h1>
+    <p>Page handle: {{ page.handle }}</p>
+  </div>
+{% endif %}

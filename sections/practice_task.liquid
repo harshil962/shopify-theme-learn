@@ -1,0 +1,191 @@
+{% comment %} Phase 1: Liquid basics (Tasks 1–10)  {% endcomment %}
+
+<div class="page-width practice-task">
+    
+{% if page != blank %}
+  <div class="page-details">
+    <h1>{{ page.title | escape }}</h1>
+    <p>Page handle: {{ page.handle }}</p>
+  </div>
+{% endif %}
+
+  {% comment %}
+     Task 1: Display a variable
+    Create a variable named student_name and show its value on the page.
+  {% endcomment %}
+
+  <h1>Phase 1</h1>
+
+  <div class="first_variable">
+    {% assign student_name = 'Harshil Prajapati' %}
+    <h2>{{ student_name }}</h2>
+  </div>
+
+  {% comment %}
+    Task 2: Create a few variables
+    Save a product name, price, and brand in separate variables. Show all three.
+  {% endcomment %}
+
+  <div class="Three_variable">
+    {% assign product_name = 'Shoes' %}
+    {% assign p_price = 1999 %}
+    {% assign p_brand = 'nike' %}
+
+    <h2>Product Name : {{ product_name }}</h2>
+    <span>Product Price: {{ p_price }}</span>
+    <p>Brand Name: {{ p_brand }}</p>
+  </div>
+
+  {% comment %}
+    Task 3: Capitalize text
+    Use a Liquid filter to make the first letter of a name a capital letter.
+  {% endcomment %}
+
+  <div class="upper_case_filter">
+    <div class="first_variable">
+      {% assign capital_name = 'first capital' %}
+      <h3>{{ capital_name | capitalize }}</h3>
+    </div>
+  </div>
+
+  {% comment %}
+    Task 4: Make text uppercase
+    Show a heading in uppercase using a Liquid filter.
+  {% endcomment %}
+
+  <div class="Uppder_case_heading">
+    <div class="u_heading">
+      {% assign heading_name = 'uppercase heading' %}
+      <h3>{{ heading_name | upcase }}</h3>
+    </div>
+  </div>
+
+  {% comment %}
+    Task 5: Make text lowercase
+    Show a sentence in lowercase using a Liquid filter.
+  {% endcomment %}
+
+  <div class="Lower_case_sentence">
+    <div class="l_sentence">
+      {% assign sentence = ' Show a sentence in lowercase using a Liquid filter' %}
+      <h3>{{ sentence | downcase }}</h3>
+    </div>
+  </div>
+
+  {% comment %}
+    Task 6: Show a default value
+    If a value is empty, show the message: Welcome to our store.
+  {% endcomment %}
+
+  <div class="default_value">
+    {% assign default_value = '' %}
+    <p>{{ default_value |   default: 'Welcome to our store default value' }}</p>
+  </div>
+
+  {% comment %}
+    Do a simple calculation
+    Create a number variable and calculate a discounted price.
+  {% endcomment %}
+
+  <div class="simple_calculation">
+    {% assign product_price = 2000 %}
+    {% assign discount_percent = 10 %}
+
+    {% assign discount_amount = product_price | times: discount_percent | divided_by: 100 %}
+    {% assign discounted_price = product_price | minus: discount_amount %}
+
+    <h2>Watch Price</h2>
+    <p>Original price: ₹{{ product_price }}</p>
+    <p>Discount: {{ discount_percent }}%</p>
+    <p>You save: ₹{{ discount_amount }}</p>
+    <p>Discounted price: ₹{{ discounted_price }}</p>
+  </div>
+
+  {% comment %}
+    Task 8: Use capture
+    Build a welcome message with capture and then show it on the page.
+  {% endcomment %}
+
+  <div class="capture">
+    {% capture wlecome_msg %}
+        welcome to our store ! {{ student_name }}
+    {% endcapture %}
+
+    <p>{{ wlecome_msg }}</p>
+  </div>
+
+  {% comment %}
+    Task 9: Remove extra spaces
+    Use Liquid whitespace controls to reduce unwanted spaces in the output.
+  {% endcomment %}
+  <div class="Remove_extra_spaces">
+    {%- assign extra_space = 'Hello  everyone  !  how     are    you.' -%}
+    <p>{{- extra_space -}}</p>
+  </div>
+
+  {% comment %}
+    Task 10: Check for an empty value
+    Show a message only when a variable has a value.
+  {% endcomment %}
+
+  <div class="empty_value">
+    {% assign emptty_value = '' %}
+
+    {% if emptty_value != blank %}
+      <p>{{ emptty_value }}</p>
+    {% endif %}
+  </div>
+
+  {% comment %}
+    Task 16: Loop through a list
+    Create a list of five names and show each name using a loop.
+  {% endcomment %}
+  <div class="for_loop_list">
+    {% assign names = 'Harshil, Rahul, Amit, Sneha, Rakesh' | split: ',' %}
+    <ul>
+      {% for name in names %}
+        <p>{{ name }}</p>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+{% style %}
+  .practice-task {
+    display: grid;
+    gap: 1rem;
+    padding-block: 2rem;
+    color: #263247;
+  }
+
+  .practice-task > div {
+    padding: 1.25rem;
+    background-color: #f5f7fb;
+    border: 1px solid #d8e0ec;
+    border-radius: 0.75rem;
+  }
+
+  .practice-task h1,
+  .practice-task h2,
+  .practice-task h3 {
+    margin-bottom: 0.5rem;
+    color: #172554;
+  }
+
+  .practice-task p,
+  .practice-task span {
+    color: #475569;
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Practice-Task",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Practice-Task-1"
+    }
+  ]
+}
+{% endschema %}

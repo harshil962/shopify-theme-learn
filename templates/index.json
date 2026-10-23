@@ -9,7 +9,6 @@
  */
 {
   "sections": {
-
     "hero_banner_wpAVab": {
       "type": "hero-banner",
       "name": "Hero banner",
@@ -19,9 +18,16 @@
         "description_text": "this is my first decs",
         "full_width_Section": false
       }
+    },
+    "collection_details": {
+      "type": "collection-details",
+      "settings": {}
+    },
+    "footer":{
+      "type":"footer",
+      "settings":{}
+
     }
   },
-  "order": [
-    "hero_banner_wpAVab"
-  ]
+  "order": ["hero_banner_wpAVab","collection-details","footer"]
 }

@@ -1,8 +1,116 @@
-<p>this is footer section</p>
+<div class="footer-section">
+  <div class="page-width footer-section__inner">
+    {% if page != blank %}
+      <div class="page-details">
+        <h1>{{ page.title | escape }}</h1>
+        <p>Page handle: {{ page.handle }}</p>
+      </div>
+    {% endif %}
+
+    <div class="footer-contact">
+      <h3>{{ shop.name | escape }}</h3>
+      <p>
+        <span>Email us</span>
+        <a href="mailto:{{ shop.email | escape }}">
+          {{ shop.email | escape }}
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+
+{% style %}
+  .footer-section {
+    position: relative;
+    padding-block: clamp(2.5rem, 6vw, 4.5rem);
+    overflow: hidden;
+    background: #0f172a;
+    color: #e2e8f0;
+  }
+
+  .footer-section::before {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #1d4ed8, #60a5fa, #bfdbfe);
+    content: '';
+  }
+
+  .footer-section__inner {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .footer-section .page-details h1,
+  .footer-contact h3 {
+    color: #fff;
+    font-family: var(--heading-font);
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+
+  .footer-section .page-details p {
+    margin-top: 0.4rem;
+    color: #94a3b8;
+    font-size: 0.875rem;
+  }
+
+  .footer-contact {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .footer-contact h3 {
+    font-size: 1.125rem;
+  }
+
+  .footer-contact p {
+    display: grid;
+    gap: 0.25rem;
+    color: #94a3b8;
+    font-size: 0.875rem;
+  }
+
+  .footer-contact a {
+    width: fit-content;
+    color: #bfdbfe;
+    text-decoration: underline;
+    text-decoration-color: rgb(191 219 254 / 40%);
+    text-underline-offset: 0.25em;
+    transition: color 160ms ease;
+  }
+
+  .footer-contact a:hover {
+    color: #fff;
+  }
+
+  @media screen and (max-width: 749px) {
+    .footer-section__inner {
+      flex-direction: column;
+      gap: 1.75rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .footer-contact a {
+      transition: none;
+    }
+  }
+{% endstyle %}
 
 {% schema %}
 {
-  "name": "Footer",
-  "settings": []
+  "name": "footer",
+  "settings": [],
+  "presets": [
+    {
+      "name": "footer"
+    }
+  ]
 }
 {% endschema %}

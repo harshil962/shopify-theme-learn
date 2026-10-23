@@ -1,0 +1,787 @@
+{{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer></script>
+<script src="{{ 'product-swiper.js' | asset_url }}" defer></script>
+{% comment %}
+  ☐ Task 11: Use an if condition
+     Show Available when a product is available.
+
+  ☐ Task 12: Use if and else
+     Show In Stock or Sold Out based on product availability.
+{% endcomment %}
+<div class="page-width main-product-container">
+  {% if page != blank %}
+    <div class="page-details">
+      <h1>{{ page.title | escape }}</h1>
+      <p>Page handle: {{ page.handle }}</p>
+    </div>
+  {% endif %}
+
+  <div class="main-product">
+    <h2>Our Products</h2>
+
+    <div class="swiper product-swiper">
+      <div class="swiper-wrapper">
+        {% comment %}
+          Task 19: Limit the number of products
+          Show only the first four products in a collection.
+          limit 4
+        {% endcomment %}
+
+        {% comment %}
+          Task 31: Build a product card
+          Make a product card with image, title, price, vendor, and product link.
+        {% endcomment %}
+        {% for product in collections.all.products %}
+          <div class="swiper-slide">
+            <a href="{{ product.url }}">
+              {% comment %} If condition  {% endcomment %}
+              {% if product.featured_image != blank %}
+                <div class="case_explore">
+                  {% comment %} Case % When  {% endcomment %}
+                  {% case product.type %}
+                    {% when 'snowboard' %}
+                      <p>Explore our clothing collection!</p>
+
+                    {% when 'shoes' %}
+                      <p>Find the perfect pair of shoes!</p>
+
+                    {% when 'accessories' %}
+                      <p>Complete your look with accessories!</p>
+
+                    {% else %}
+                      <p>Explore this product!</p>
+                  {% endcase %}
+                </div>
+                {% comment %} featured_image {% endcomment %}
+
+                {{
+                  product.featured_image
+                  | image_url: width: 400
+                  | image_tag: alt: product.featured_image.alt, width: 400, height: 400, loading: 'lazy'
+                }}
+              {% endif %}
+              {% comment %} product title {% endcomment %}
+              <h3 class="product_title">{{ forloop.index }}. {{ product.title }}</h3>
+            </a>
+            {% comment %} description {% endcomment %}
+            <p class="product-description">
+              {{ product.description | strip_html | truncate: 100 | escape }}
+            </p>
+            {% comment %} price {% endcomment %}
+            {% comment %} sale price  {% endcomment %}
+            {% assign selected_variant = product.selected_or_first_available_variant %}
+
+            {% if selected_variant.compare_at_price > selected_variant.price %}
+              <span class="sale-label">Sale</span>
+            {% endif %}
+
+            {% comment %}
+              Show a product metafield
+              Create a product metafield for material and show it on the product page.
+            {% endcomment %}
+            {% if product.metafields.custom.material != blank %}
+              <p class="product-detail">
+                <strong>Material:</strong>
+                {{ product.metafields.custom.material.value | escape }}
+              </p>
+            {% endif %}
+
+            {% if product.metafields.custom.size != blank %}
+              <p class="product-detail">
+                <strong>Size:</strong>
+                {{ product.metafields.custom.size.value | escape }}
+              </p>
+            {% endif %}
+
+            {% if product.metafields.custom.care != blank %}
+              <p class="product-detail">
+                <strong>Care:</strong>
+                {{ product.metafields.custom.care.value | escape | newline_to_br }}
+              </p>
+            {% endif %}
+
+            <div class="product-price">
+              {% if selected_variant.compare_at_price > selected_variant.price %}
+                <s>{{ selected_variant.compare_at_price | money }}</s>
+                <span>{{ selected_variant.price | money }}</span>
+              {% else %}
+                <span>{{ selected_variant.price | money }}</span>
+              {% endif %}
+            </div>
+
+            {% comment %} vendor {% endcomment %}
+            <p class="product-vendor">{{ product.vendor }}</p>
+
+            {% if product.tags.size > 0 %}
+              <div class="product-tags">
+                {% for tag in product.tags %}
+                  <span class="product-tag">{{ tag | escape }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <div class="product-variants">
+              <label for="Variant-{{ section.id }}-{{ product.id }}"> Choose an option: </label>
+
+              <select
+                id="Variant-{{ section.id }}-{{ product.id }}"
+                class="variant-select"
+                data-product-id="{{ product.id }}"
+              >
+                {% for variant in product.variants %}
+                  <option
+                    value="{{ variant.id }}"
+                    data-available="{{ variant.available }}"
+                    data-price="{{ variant.price | money | escape }}"
+                    {% if variant.id == product.selected_or_first_available_variant.id %}
+                      selected
+                    {% endif %}
+                    {% unless variant.available %}
+                      disabled
+                    {% endunless %}
+                  >
+                    {{ variant.title | escape }}
+                    {% unless variant.available %} - Sold out{% endunless %}
+                  </option>
+                {% endfor %}
+              </select>
+
+              {% comment %}
+                <p class="variant-availability" aria-live="polite">
+                  {% if product.selected_or_first_available_variant.available %}
+                    Available
+                  {% else %}
+                    Sold out
+                  {% endif %}
+                </p>
+              {% endcomment %}
+            </div>
+
+            {% comment %}
+              Task 14: Use unless
+              Show a message unless a product is sold out.
+            {% endcomment %}
+
+            {% comment %} unless  {% endcomment %}
+            {% unless product.available == false %}
+              <p class="unless_msg">This product is available to buy !</p>
+            {% endunless %}
+
+            {% comment %} If else condition {% endcomment %}
+            {% comment %}
+              Add a sold-out label
+              Show a Sold Out label when a product cannot be purchased.
+            {% endcomment %}
+            {% render 'product-badge', product: product %}
+
+            {% assign cart_variant = product.selected_or_first_available_variant %}
+
+            {% if cart_variant != blank and product.available %}
+              {% form 'product', product, action: '/cart/add' %}
+                <input
+                  type="hidden"
+                  name="id"
+                  value="{{ cart_variant.id }}"
+                >
+                <button type="submit" name="add">Add to cart</button>
+              {% endform %}
+            {% endif %}
+          </div>
+        {% else %}
+          <p class="swiper-slide">No products found.</p>
+        {% endfor %}
+      </div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+      <div class="swiper-pagination"></div>
+    </div>
+  </div>
+
+  {% comment %}
+    Task 13: Check two conditions
+    Check if a product is available and costs more than 1,000 in the store currency.
+  {% endcomment %}
+  <div class="product-conditions">
+    <div class="two_conditions">
+      {% comment %} For loop  {% endcomment %}
+      {% for product in collections.all.products %}
+        {% if product.available and product.price > 100000 %}
+          <p>{{ product.title }} is available and costs more than {{ 100000 | money }}.</p>
+        {% else %}
+          <p>{{ product.title }} is unavailable or costs {{ 100000 | money }} or less.</p>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="page-width">
+    {% assign product_name = 'Classic Cotton T-Shirt' %}
+    {% comment %} used | handleize {% endcomment %}
+    {% assign product_handle = product_name | handleize %}
+
+    <p>Product handle: {{ product_handle }}</p>
+    {% comment %} used link_to and escape  {% endcomment %}
+    {{ product_name | escape | link_to: 'products/clasic-t-shirt' }}
+  </div>
+</div>
+
+{% comment %} Task 32: Collection Grid {% endcomment %}
+
+<div class="page-width collection-grid">
+  {% assign selected_collection = section.settings.selected_collection %}
+
+  {% if selected_collection != blank %}
+    <h2>{{ selected_collection.title | escape }}</h2>
+
+    {% if selected_collection.products.size > 0 %}
+      {% for product in selected_collection.products %}
+        <div class="collection-grid__item">
+          {% if product.featured_image != blank %}
+            {{ product.featured_image | image_url: width: 400 | image_tag: width: 400, height: 400, loading: 'lazy' }}
+            <a href="{{ product.url }}">
+              <h3>{{ product.title | escape }}</h3>
+            </a>
+            <p>{{ product.price | money }}</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>No products found in this collection.</p>
+    {% endif %}
+  {% else %}
+    <p>Please select a collection in the Theme Editor.</p>
+  {% endif %}
+</div>
+
+{% comment %} styling  {% endcomment %}
+
+{% style %}
+  .main-product {
+    padding-block: 3rem;
+  }
+
+  .main-product > h2 {
+    margin: 0 0 1.75rem;
+    color: #172554;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.03em;
+  }
+
+  /* Slider spacing */
+  .main-product .product-swiper {
+    position: relative;
+    padding: 0.5rem 2.75rem 3.5rem;
+    overflow: hidden;
+  }
+
+  .main-product .swiper-wrapper {
+    align-items: stretch;
+  }
+
+  /* Product cards */
+  .main-product .swiper-slide {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    height: auto;
+    box-sizing: border-box;
+    padding: 0.875rem;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    background: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
+    box-shadow: 0 4px 14px rgb(15 23 42 / 6%);
+    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  }
+
+  .main-product .swiper-slide:hover,
+  .main-product .swiper-slide:focus-within {
+    transform: translateY(-3px);
+    border-color: #bfdbfe;
+    box-shadow: 0 12px 26px rgb(15 23 42 / 12%);
+  }
+
+  /* Product link and content */
+  .main-product .swiper-slide > a {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .main-product .swiper-slide > a:focus-visible {
+    outline-offset: 4px;
+  }
+
+  .main-product .case_explore {
+    align-self: flex-start;
+    padding: 0.35rem 0.65rem;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  .main-product .case_explore p {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .main-product .swiper-slide img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    border-radius: 0.75rem;
+    background: #f1f5f9;
+  }
+
+  .main-product .swiper-slide .product_title {
+    display: -webkit-box;
+    min-height: 2.8em;
+    margin: 0;
+    overflow: hidden;
+    color: #0f172a;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.4;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .main-product .swiper-slide .product-description {
+    display: -webkit-box;
+    min-height: 4.5em;
+    margin: 0;
+    overflow: hidden;
+    color: #64748b;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  .main-product .swiper-slide .product-price {
+    margin: 0;
+    color: #1d4ed8;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .main-product .swiper-slide .product-price s {
+    margin-right: 0.4rem;
+    color: #94a3b8;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .main-product .swiper-slide .sale-label {
+    align-self: flex-start;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    background: #fee2e2;
+    color: #b91c1c;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .main-product .swiper-slide .product-detail {
+    margin: 0;
+    color: #475569;
+    font-size: 0.8rem;
+    line-height: 1.5;
+  }
+
+  .main-product .swiper-slide .product-detail strong {
+    color: #0f172a;
+    font-weight: 600;
+  }
+
+  .main-product .swiper-slide .product-vendor {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .main-product .swiper-slide .product-variants {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.45rem;
+  }
+
+  .main-product .swiper-slide .product-variants label {
+    color: #475569;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .main-product .swiper-slide .variant-select {
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0.55rem 2.25rem 0.55rem 0.75rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 0.625rem;
+    background-color: #fff;
+    color: #0f172a;
+    font-size: 0.875rem;
+    cursor: pointer;
+  }
+
+  .main-product .swiper-slide .variant-select:hover {
+    border-color: #93c5fd;
+  }
+
+  .main-product .swiper-slide .variant-availability {
+    margin: 0;
+    color: #166534;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .main-product .swiper-slide .product-variants span {
+    padding: 0.2rem 0.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 999px;
+    background: #fff;
+    color: #475569;
+    font-size: 0.7rem;
+  }
+
+  /* Availability labels */
+  .main-product .swiper-slide .unless_msg {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.8rem;
+  }
+
+  .main-product .swiper-slide .in-stock,
+  .main-product .swiper-slide .sold-out {
+    align-self: flex-start;
+    margin-top: auto;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .main-product .swiper-slide .in-stock {
+    color: #166534;
+    background: #dcfce7;
+  }
+
+  .main-product .swiper-slide .sold-out {
+    color: #991b1b;
+    background: #fee2e2;
+  }
+
+  .main-product .swiper-slide .product-badge {
+    margin-top: 0;
+  }
+
+  .main-product .swiper-slide form {
+    width: 100%;
+    margin-top: auto;
+  }
+
+  .main-product .swiper-slide form button {
+    width: 100%;
+    min-height: 2.875rem;
+    padding: 0.7rem 1rem;
+    border: 1px solid #1d4ed8;
+    border-radius: 0.7rem;
+    background: #1d4ed8;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 160ms ease, background-color 160ms ease, border-color 160ms ease;
+  }
+
+  .main-product .swiper-slide form button:hover {
+    transform: translateY(-1px);
+    border-color: #172554;
+    background: #172554;
+  }
+
+  /* Navigation arrows */
+  .main-product .swiper-button-prev,
+  .main-product .swiper-button-next {
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-top: 0;
+    color: #172554;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 50%;
+    box-shadow: 0 2px 8px rgb(15 23 42 / 8%);
+    transform: translateY(-50%);
+  }
+
+  .main-product .swiper-button-prev {
+    left: 0;
+  }
+
+  .main-product .swiper-button-next {
+    right: 0;
+  }
+
+  .main-product .swiper-button-prev::after,
+  .main-product .swiper-button-next::after {
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+
+  .main-product .swiper-button-prev:hover,
+  .main-product .swiper-button-next:hover {
+    color: #fff;
+    background: #172554;
+  }
+
+  .main-product .swiper-button-disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  /* Pagination */
+  .main-product .swiper-pagination {
+    bottom: 0.5rem;
+  }
+
+  .main-product .swiper-pagination-bullet {
+    width: 7px;
+    height: 7px;
+    background: #94a3b8;
+    opacity: 1;
+  }
+
+  .main-product .swiper-pagination-bullet-active {
+    width: 20px;
+    border-radius: 999px;
+    background: #172554;
+  }
+
+  /* Task 13: Product condition messages */
+  .product-conditions {
+    padding-block: 1rem 2.5rem;
+  }
+
+  .product-conditions .two_conditions {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .product-conditions .two_conditions p {
+    margin: 0;
+    padding: 0.85rem 1rem;
+    border: 1px solid #dbeafe;
+    border-left: 4px solid #60a5fa;
+    border-radius: 8px;
+    background: #eff6ff;
+    color: #334155;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .collection-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+    gap: clamp(0.875rem, 2vw, 1.5rem);
+    margin-block: clamp(2rem, 5vw, 3.5rem);
+  }
+
+  .collection-grid > h2 {
+    grid-column: 1 / -1;
+    margin-bottom: 0.25rem;
+    color: #172554;
+    font-family: var(--heading-font);
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1.2;
+  }
+
+  .collection-grid__item {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.875rem;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    background: linear-gradient(180deg, #fff 0%, #f8fafc 100%);
+    box-shadow: 0 4px 14px rgb(15 23 42 / 6%);
+    transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+  }
+
+  .collection-grid__item:hover,
+  .collection-grid__item:focus-within {
+    transform: translateY(-3px);
+    border-color: #bfdbfe;
+    box-shadow: 0 12px 26px rgb(15 23 42 / 12%);
+  }
+
+  .collection-grid__item img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 0.75rem;
+    background: #f1f5f9;
+    object-fit: cover;
+  }
+
+  .collection-grid__item a {
+    color: #0f172a;
+    text-decoration: none;
+  }
+
+  .collection-grid__item h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .collection-grid__item a:hover h3 {
+    color: #1d4ed8;
+  }
+
+  .collection-grid__item > p {
+    margin-top: auto;
+    color: #1d4ed8;
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .collection-grid > p {
+    grid-column: 1 / -1;
+    padding: 1rem 1.25rem;
+    border: 1px dashed #cbd5e1;
+    border-radius: 0.75rem;
+    background: #f8fafc;
+    color: #64748b;
+    text-align: center;
+  }
+
+  .main-product .product-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .main-product .product-tag {
+    padding: 4px 8px;
+    border-radius: 12px;
+    background: #e0f2fe;
+    color: #075985;
+    font-size: 12px;
+  }
+
+  /* Mobile layout */
+  @media screen and (max-width: 749px) {
+    .main-product {
+      padding-block: 2rem;
+    }
+
+    .main-product .product-swiper {
+      padding-inline: 2.25rem;
+      padding-bottom: 3rem;
+    }
+
+    .main-product .swiper-slide {
+      padding: 0.75rem;
+      border-radius: 0.75rem;
+    }
+
+    .main-product .swiper-button-prev,
+    .main-product .swiper-button-next {
+      width: 2rem;
+      height: 2rem;
+    }
+
+    .main-product .swiper-button-prev::after,
+    .main-product .swiper-button-next::after {
+      font-size: 0.7rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .main-product .swiper-slide,
+    .main-product .swiper-slide form button {
+      transition: none;
+    }
+
+    .collection-grid__item {
+      transition: none;
+    }
+  }
+{% endstyle %}
+
+<script>
+  document.querySelectorAll('.variant-select').forEach((select) => {
+    select.addEventListener('change', () => {
+      const option = select.selectedOptions[0];
+      const card = select.closest('.swiper-slide');
+
+      if (!option || !card) return;
+
+      const availability = card.querySelector('.variant-availability');
+      const price = card.querySelector('.product-price');
+      const cartForm = card.querySelector('form[action*="/cart/add"]');
+      const available = option.dataset.available === 'true';
+
+      if (availability) {
+        availability.textContent = available ? 'Available' : 'Sold out';
+      }
+
+      if (price) {
+        price.textContent = option.dataset.price;
+      }
+
+      if (cartForm) {
+        const idInput = cartForm.querySelector('[name="id"]');
+        const button = cartForm.querySelector('[type="submit"]');
+
+        if (idInput) idInput.value = option.value;
+
+        if (button) {
+          button.disabled = !available;
+          button.textContent = available ? 'Add to cart' : 'Sold out';
+        }
+      }
+    });
+  });
+</script>
+
+{% comment %} Schema  {% endcomment %}
+
+{% schema %}
+{
+  "name": "Product Card Grid",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "selected_collection",
+      "label": "Select Collection"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Card Grid"
+    }
+  ]
+}
+{% endschema %}

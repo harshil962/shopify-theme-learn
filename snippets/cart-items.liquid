@@ -1,0 +1,9 @@
+<p>Cart item count: {{ cart.item_count }}</p>
+
+<p>Cart items size: {{ cart.items.size }}</p>
+
+{% for item in cart.items %}
+  <p>{{ item.product.title | escape }}</p>
+{% else %}
+  <p>Your cart is empty.</p>
+{% endfor %}

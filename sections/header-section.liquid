@@ -1,49 +1,59 @@
+
 {% liquid
   assign menu = section.settings.menu
 %}
 
-<div class="page-width">
-  <nav class="primary-navigation">
-    <ul class="menu  flex-wrap">
-      {% for link in menu.links %}
-        {% if link.links != blank %}
-          <li>
-            <details class="dropdown-list">
-              <summary class="flex-between">
-                {{ link.title }}
-                {% render 'icons', icon_name: 'chevron-down', icon_stroke: 1.5 %}
-              </summary>
-              <ul class="sub-menu">
-                {% for child in link.links %}
-                  {% if child.links != blank %}
-                    <li>
-                      <details class="dropdown-list-nested ">
-                        <summary class="flex-between">
-                          {{ child.title }}
-                          {% render 'icons', icon_name: 'chevron-right', icon_stroke: 1.5 %}
-                        </summary>
-                        <ul class="sub-menu sub-menu--flyout">
-                          {% for grand_child in child.links %}
-                            <li>{{ grand_child.title | link_to: grand_child.url, class: 'd-block' }}</li>
-                          {% endfor %}
-                        </ul>
-                      </details>
-                    </li>
-                  {% else %}
-                    <li>
-                      {{ child.title | link_to: child.url, class: 'd-block' }}
-                    </li>
-                  {% endif %}
-                {% endfor %}
-              </ul>
-            </details>
-          </li>
-        {% else %}
-          <li>{{ link.title | link_to: link.url }}</li>
-        {% endif %}
-      {% endfor %}
-    </ul>
-  </nav>
+<div class="page-width header-section__width">
+  <div class="header-section">
+    <a class="header-section__brand" href="{{ routes.root_url }}">
+      {{ shop.name | escape }}
+    </a>
+    <nav class="primary-navigation" aria-label="Primary navigation">
+      <ul class="menu header-section__menu">
+        {% for link in menu.links %}
+          {% if link.links != blank %}
+            <li class="header-section__item">
+              <details class="dropdown-list">
+                <summary class="header-section__trigger">
+                  <span>{{ link.title | escape }}</span>
+                  {% render 'icons', icon_name: 'chevron-down', icon_size: 16, icon_stroke: 1.8 %}
+                </summary>
+                <ul class="sub-menu header-section__submenu">
+                  {% for child in link.links %}
+                    {% if child.links != blank %}
+                      <li>
+                        <details class="dropdown-list-nested ">
+                          <summary class="header-section__trigger header-section__nested-trigger">
+                            <span>{{ child.title | escape }}</span>
+                            {% render 'icons', icon_name: 'chevron-right', icon_size: 16, icon_stroke: 1.8 %}
+                          </summary>
+                          <ul class="sub-menu sub-menu--flyout header-section__submenu">
+                            {% for grand_child in child.links %}
+                              <li>
+                                {{ grand_child.title | link_to: grand_child.url, class: 'header-section__link' }}
+                              </li>
+                            {% endfor %}
+                          </ul>
+                        </details>
+                      </li>
+                    {% else %}
+                      <li>
+                        {{ child.title | link_to: child.url, class: 'header-section__link' }}
+                      </li>
+                    {% endif %}
+                  {% endfor %}
+                </ul>
+              </details>
+            </li>
+          {% else %}
+            <li class="header-section__item">
+              {{ link.title | link_to: link.url, class: 'header-section__link header-section__link--top' }}
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </nav>
+  </div>
 </div>
 
 <script>
@@ -73,6 +83,178 @@
   });
 </script>
 
+{% style %}
+  .header-section__width {
+    max-width: none;
+    padding-inline: clamp(1rem, 4vw, 4rem);
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .header-section {
+    display: flex;
+    max-width: var(--page-width);
+    min-height: 5rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+    margin-inline: auto;
+  }
+
+  .header-section__brand {
+    flex: 0 0 auto;
+    color: #172554;
+    font-family: var(--heading-font);
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.04em;
+  }
+
+  .header-section .primary-navigation {
+    align-self: stretch;
+  }
+
+  .header-section__menu {
+    display: flex;
+    height: 100%;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.25rem;
+  }
+
+  .header-section__item,
+  .header-section .dropdown-list,
+  .header-section .dropdown-list-nested {
+    position: relative;
+  }
+
+  .header-section__link,
+  .header-section__trigger {
+    display: flex;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    padding: 0.65rem 0.9rem;
+    border-radius: 0.65rem;
+    color: #334155;
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.25;
+    transition:
+      background-color 160ms ease,
+      color 160ms ease;
+  }
+
+  .header-section__link--top,
+  .header-section__trigger {
+    white-space: nowrap;
+  }
+
+  .header-section__link:hover,
+  .header-section__trigger:hover,
+  .header-section__trigger:focus-visible,
+  .header-section details[open] > .header-section__trigger {
+    background: #eff6ff;
+    color: #1d4ed8;
+  }
+
+  .header-section__trigger svg {
+    flex: 0 0 auto;
+    transition: transform 160ms ease;
+  }
+
+  .header-section details[open] > .header-section__trigger svg {
+    transform: rotate(180deg);
+  }
+
+  .header-section .dropdown-list > .header-section__submenu,
+  .header-section .dropdown-list-nested > .header-section__submenu {
+    position: absolute;
+    z-index: 20;
+    top: calc(100% + 0.35rem);
+    left: 0;
+    min-width: 13rem;
+    padding: 0.4rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.85rem;
+    background: #fff;
+    box-shadow: 0 14px 35px rgb(15 23 42 / 12%);
+  }
+
+  .header-section__submenu .header-section__link,
+  .header-section__nested-trigger {
+    width: 100%;
+    min-height: 2.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .header-section__submenu .header-section__link {
+    padding-inline: 0.75rem;
+  }
+
+  .header-section__submenu--flyout,
+  .header-section .sub-menu--flyout {
+    top: 0;
+    left: calc(100% + 0.3rem);
+  }
+
+  @media screen and (max-width: 749px) {
+    .header-section {
+      min-height: auto;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.25rem;
+      padding-block: 1rem 0.75rem;
+    }
+
+    .header-section__brand {
+      text-align: center;
+    }
+
+    .header-section .primary-navigation {
+      align-self: auto;
+    }
+
+    .header-section__menu {
+      justify-content: center;
+      gap: 0.15rem;
+    }
+
+    .header-section__link--top,
+    .header-section__trigger {
+      padding-inline: 0.65rem;
+      font-size: 0.85rem;
+    }
+
+    .header-section .dropdown-list > .header-section__submenu {
+      top: calc(100% + 0.25rem);
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .header-section .dropdown-list-nested > .header-section__submenu {
+      position: static;
+      top: auto;
+      left: auto;
+      min-width: auto;
+      margin: 0 0.35rem 0.35rem;
+      transform: none;
+      box-shadow: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .header-section__link,
+    .header-section__trigger,
+    .header-section__trigger svg {
+      transition: none;
+    }
+  }
+{% endstyle %}
+
 {% schema %}
 {
   "name": "Header",
@@ -81,7 +263,7 @@
     {
       "type": "link_list",
       "id": "menu",
-      "label": "select-menu",
+      "label": "Select navigation menu",
       "default": "main-menu"
     }
   ]

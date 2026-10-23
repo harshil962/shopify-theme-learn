@@ -1,0 +1,43 @@
+<div class="page-width">
+  {% if page != blank %}
+    <div class="page-details">
+      <h1>{{ page.title | escape }}</h1>
+      <p>Page handle: {{ page.handle }}</p>
+    </div>
+  {% endif %}
+
+  {% assign collection = collections['summer-collection'] %}
+  <div class="collection-details">
+    <h2>{{ collection.title }}</h2>
+    {% comment %}
+      Task 42: Show a collection metafield
+      Create a collection metafield for a banner heading and show it on the collection page.
+    {% endcomment %}
+    {% if collection.metafields.custom.banner_heading != blank %}
+      <h3>{{ collection.metafields.custom.banner_heading.value | escape }}</h3>
+    {% endif %}
+    <p>{{ collection.description }}</p>
+
+    {% if collection.image != blank %}
+      <img
+        src="{{ collection.image | image_url: width: 800 }}"
+        alt="{{ collection.image.alt | default: collection.title | escape }}"
+        width="100"
+        height="100"
+        loading="lazy"
+      >
+    {% endif %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "collection-details",
+  "settings": [],
+  "presets": [
+    {
+      "name": "collection-details"
+    }
+  ]
+}
+{% endschema %}
